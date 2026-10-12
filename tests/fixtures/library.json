@@ -1,0 +1,8 @@
+[
+  {"id": "dawkins1986", "type": "book", "title": "The Blind Watchmaker",
+   "author": [{"family": "Dawkins", "given": "Richard"}], "issued": {"date-parts": [[1986]]},
+   "publisher": "Longman"},
+  {"id": "gould1989", "type": "book", "title": "Wonderful Life",
+   "author": [{"family": "Gould", "given": "Stephen Jay"}], "issued": {"date-parts": [[1989]]},
+   "publisher": "Norton"}
+]

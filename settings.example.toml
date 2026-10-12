@@ -1,0 +1,196 @@
+# critic-export settings
+#
+# Settings for a single manuscript or folder can also go in a
+# critic-export.toml next to the manuscript (see README, Project settings).
+#
+# critic-export reads settings.toml in the same folder as critic_export.py.
+# If it is missing, it is created from this file on the first run. Edit
+# settings.toml, not this file: settings.example.toml is the documented
+# template and is replaced when you update critic-export.
+# (Use --settings FILE to read another file for a single run.)
+#
+# Every setting is optional. Relative paths are relative to the script folder.
+# ~ and environment variables (%USERPROFILE%, $HOME) are expanded.
+# Use forward slashes in Windows paths, or single quotes: 'C:\Users\me\file.json'.
+
+[general]
+# Name shown on tracked changes and comments in Word.
+author = ""
+
+# Author of the document itself (title page, PDF properties), used when the
+# YAML header has no author:. A name, or a list for several: ["A", "B"].
+# "" = a PDF export asks for it.
+document_author = ""
+
+# Formats exported when --to is not given. Common ones: "docx", "pdf", "html",
+# "odt", "epub", "latex", "typst", "rtf", "md". Any Pandoc output format works.
+formats = ["docx"]
+
+# Output folder, relative to the exported document. "" = same folder.
+output_dir = "critic-exports"
+
+# Output file name without extension. {stem} = document name, so the export is
+# named like the note and replaced at each export. Add {timestamp} (the time
+# below) to keep every export, e.g. "{stem}@{timestamp}".
+filename = "{stem}"
+
+# strftime format for {timestamp}, e.g. "%Y-%m-%d_%H%M".
+timestamp = "%y%m%dT%H%M%S"
+
+# Open the exported file(s) when done (same as --open).
+open_after_export = false
+
+[tools]
+# Path to pandoc. "" = find it on PATH.
+pandoc = ""
+
+# PDF engine: name on PATH or full path. LaTeX engines (xelatex, lualatex,
+# pdflatex, tectonic) and HTML engines (weasyprint, prince) can show
+# CriticMarkup in PDF; others (e.g. typst) always export with changes
+# accepted. xelatex handles non-ASCII text best.
+pdf_engine = "xelatex"
+
+[citations]
+# Bibliography exported by Better BibTeX with "Keep updated" (see README).
+# Better CSL JSON (.json) is recommended; .bib and .yaml also work.
+# One file, or a list of files and glob patterns:
+#   bibliography = "~/Zotero/library.json"
+#   bibliography = ["~/Zotero/library.json", "~/Zotero/group-*.json"]
+# If a citation key occurs in several files, the last one listed wins and
+# critic-export prints a warning.
+# A "bibliography:" entry in a document's YAML header takes precedence.
+bibliography = ""
+
+# Citation style: the name of a style installed in Zotero (file name without
+# .csl, see --list-styles) or a path to a .csl file. "" = Pandoc's default
+# (Chicago author-date). A "csl:" line in a document's YAML header takes precedence.
+style = ""
+
+# Zotero data folder, where the "styles" folder lives. "" = ~/Zotero.
+zotero_data_dir = ""
+
+# Make in-text citations link to the reference list.
+link_citations = true
+
+[critic]
+# How CriticMarkup is handled per format:
+#   track   Word only: tracked changes and Word comments
+#   markup  insertions blue, deletions red and struck through, comments as
+#           footnotes (html, epub, pdf, latex)
+#   accept  all changes accepted, comments removed (clean text)
+# Formats that cannot show markup are always exported with changes accepted.
+docx = "track"
+html = "markup"
+pdf = "accept"
+epub = "accept"
+other = "accept"        # every format not listed above
+
+# Label in front of comments rendered as footnotes (HTML/PDF markup).
+comment_label = "Comment"
+
+# People whose comments may start with their name without @: with
+# reviewers = ["Anna"], {>>Anna: text<<} is a comment by Anna. With @
+# ({>>@Anna: text<<}) any name works.
+reviewers = []
+
+[obsidian]
+# Convert Obsidian syntax: embedded notes and images (![[...]]), wikilinks,
+# %%comments%%, ==highlights==, callouts, tags and block IDs.
+#   "auto"  when the document is inside an Obsidian vault (a folder with .obsidian)
+#   true    always (the document's folder is treated as the vault if none is found)
+#   false   never
+enabled = "auto"
+
+# Remove #tags from the text. Lines holding only tags are removed entirely.
+remove_tags = true
+
+# How deep embedded notes may embed other notes.
+max_embed_depth = 5
+
+[syntax]
+# Page breaks on a line of their own (\newpage, \pagebreak, \clearpage or
+# Quarto's {{< pagebreak >}}) become real page breaks in Word, ODT, PDF,
+# HTML/EPUB (when printed) and Typst. Pandoc alone keeps them only in PDF.
+page_breaks = true
+
+# Remove <!-- HTML comments -->. Word drops them anyway, but HTML and EPUB
+# would carry them along, hidden but readable in the file.
+remove_html_comments = true
+
+[crossref]
+# Number labelled figures, tables, equations and sections and resolve
+# references to them: {#fig:id} and @fig:id (also Quarto style {#fig-id}).
+enabled = true
+
+# Labels follow the document's language (lang in the YAML header); built in
+# for English, Swedish, Danish, Norwegian, German, French and Spanish.
+# Set any of these to override. "figure" is used in captions ("Figure 1: ..."),
+# "figure_ref"/"figure_refs" in the text ("see figure 1", "figures 1 and 2").
+# figure = "Fig."
+# figure_ref = "fig."
+# figure_refs = "figs."
+# table = ""
+# table_ref = ""
+# table_refs = ""
+# equation = ""
+# equation_ref = ""
+# equation_refs = ""
+# section = ""
+# section_ref = ""
+# section_refs = ""
+# and = ""              # word joining the last two numbers: "and", "och" ...
+# separator = ": "      # between number and caption text, e.g. ". "
+
+[context_menu]
+# Windows only. "critic-export --install-context-menu" adds a submenu to the
+# Explorer right-click menu for these file types. Run it again after changing
+# this section or moving the script; "--uninstall-context-menu" removes it.
+# On Windows 11 the menu is under "Show more options" (or Shift + right-click).
+title = "critic-export"
+extensions = [".md", ".qmd", ".rmd", ".markdown"]
+
+# One entry per menu item: the label and the options passed to critic-export.
+items = [
+  { label = "Word", args = "--to docx --open" },
+  { label = "PDF (review copy)", args = "--to pdf --critic markup --open" },
+  { label = "PDF (clean)", args = "--to pdf --critic accept --open" },
+  { label = "HTML", args = "--to html --open" },
+  { label = "Word, PDF and HTML", args = "--to docx pdf html" },
+]
+
+[import]
+# --import skips tracked changes and comments by you, since they are already
+# in the manuscript. "author" in [general] is always counted as you; add any
+# other names Word may use for you (initials, full name).
+own_authors = []
+
+[count]
+# --count leaves out sections with these headings (a reference list written
+# by hand). Matching ignores case.
+exclude_sections = ["References", "Bibliography", "Referenser", "Litteratur",
+                    "Litteraturförteckning", "Källor", "Literatur", "Références"]
+
+[docx]
+# Word template whose styles (fonts, headings) are used. Create one with:
+#   pandoc -o template.docx --print-default-data-file reference.docx
+reference_doc = ""
+
+# Make citations Zotero fields that the Zotero Word plugin can refresh and edit,
+# with Zotero's own bibliography. Needs Zotero running at export. --zotero-fields
+# and --no-zotero-fields override this for one run.
+zotero_fields = false
+
+[html]
+# Extra CSS file for HTML output.
+css = ""
+
+[locators]
+# Zotero Integration writes locators in English, e.g. [@key, {chap. 3}].
+# Page numbers are handled automatically and labelled in the document's
+# language by the citation style. For other locator types in non-English
+# documents, map the English abbreviation to the term Pandoc expects in
+# your language (the short term from the CSL locale file).
+# Swedish example:
+# "chap." = "kap."
+# "para." = "st."
+# "vol."  = "vol."

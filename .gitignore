@@ -1,0 +1,13 @@
+# Personal settings, not for publishing
+settings.toml
+settings.toml.bak
+
+# Exports and leftovers
+critic-exports/
+document_exports/
+.*.critic-export.*.md
+__pycache__/
+.pytest_cache/
+
+# Local backups (Unisono)
+Backups/

@@ -1,0 +1,6 @@
+[
+  {"id": "gould1989", "type": "book", "title": "Wonderful Life (group copy)",
+   "author": [{"family": "Gould", "given": "S. J."}], "issued": {"date-parts": [[1989]]}},
+  {"id": "conway2003", "type": "book", "title": "Life's Solution",
+   "author": [{"family": "Conway Morris", "given": "Simon"}], "issued": {"date-parts": [[2003]]}}
+]
